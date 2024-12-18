@@ -58,11 +58,11 @@
             box-sizing: border-box;
         }
 
-            input:focus {
-                background-color: #2D4578;
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-                outline: none;
-            }
+        input:focus {
+            background-color: #2D4578;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            outline: none;
+        }
 
         button {
             width: 100%;
@@ -76,14 +76,14 @@
             margin-top: 10px;
         }
 
-            button:hover {
-                background-color: #31578E;
-                transform: scale(1.05);
-            }
+        button:hover {
+            background-color: #31578E;
+            transform: scale(1.05);
+        }
 
-            button:active {
-                transform: scale(0.95);
-            }
+        button:active {
+            transform: scale(0.95);
+        }
 
         .results {
             margin-top: 30px;
@@ -129,18 +129,18 @@
             scrollbar-color: #3F51B5 transparent;
         }
 
-            .container-scrollable.visible {
-                display: block;
-            }
+        .container-scrollable.visible {
+            display: block;
+        }
 
-            .container-scrollable::-webkit-scrollbar {
-                width: 6px;
-            }
+        .container-scrollable::-webkit-scrollbar {
+            width: 6px;
+        }
 
-            .container-scrollable::-webkit-scrollbar-thumb {
-                background-color: #3F51B5;
-                border-radius: 10px;
-            }
+        .container-scrollable::-webkit-scrollbar-thumb {
+            background-color: #3F51B5;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -183,14 +183,17 @@
         </div>
 
         <div class="container-scrollable" id="chartsContainer">
+            <!-- Stapeldiagram för resultat -->
             <div class="chart-container">
                 <canvas id="resultChart"></canvas>
             </div>
 
+            <!-- Linjediagram för lagerförändring under 30 dagar -->
             <div class="chart-container">
                 <canvas id="lagerChangeChart30Days"></canvas>
             </div>
 
+            <!-- Lagerförändring under 1 år -->
             <div class="chart-container">
                 <canvas id="lagerChangeChart365Days"></canvas>
             </div>
@@ -198,7 +201,7 @@
     </div>
 
     <footer>
-        <p class="footer-text">Made by Daniel och Steven</p>
+        <p class="footer-text">Made by Daniel</p>
     </footer>
 
     <script>
@@ -222,13 +225,14 @@
             let lagerData30Days = [];
             let lagerData365Days = [];
             let labels = Array.from({ length: 365 }, (_, i) => `Dag ${i + 1}`);
-
+            
             for (let i = 0; i < dagar; i++) {
+                // Förbrukning av lager varje dag
                 currentLager -= dagsforsaljning;
                 if (currentLager <= sakerhetsLager) {
                     currentLager += pafyllningsKvantitet; // Påfyllning sker när vi når säkerhetslager
                 }
-
+                
                 lagerData365Days.push(currentLager);
 
                 if (i < 30) {
@@ -236,13 +240,15 @@
                 }
             }
 
+            // Visa resultat
             resultsContent.innerHTML = `
-                    <p><strong>Max lager:</strong> ${maxLager} st</p>
-                    <p><strong>Förbrukning per dag:</strong> ${dagsforsaljning.toFixed(2)} st</p>
-                    <p><strong>Säkerhetslager:</strong> ${sakerhetsLager} st</p>
-                    <p><strong>Påfyllningskvantitet:</strong> ${pafyllningsKvantitet} st</p>
-                `;
+                <p><strong>Max lager:</strong> ${maxLager} st</p>
+                <p><strong>Förbrukning per dag:</strong> ${dagsforsaljning.toFixed(2)} st</p>
+                <p><strong>Säkerhetslager:</strong> ${sakerhetsLager} st</p>
+                <p><strong>Påfyllningskvantitet:</strong> ${pafyllningsKvantitet} st</p>
+            `;
 
+            // Visa grafer och resultat container
             document.getElementById('chartsContainer').classList.add('visible');
             document.getElementById('results').style.display = 'block';
 
@@ -358,29 +364,20 @@
                 },
                 options: {
                     responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
                     scales: {
                         x: {
-                            ticks: {
-                                font: {
-                                    size: 12,
-                                    family: 'Lexend',
-                                    weight: 'normal'
-                                },
-                                color: '#E1E5F2'
-                            },
+                            beginAtZero: true,
                             grid: {
                                 color: '#3A4F76'
                             }
                         },
                         y: {
-                            ticks: {
-                                font: {
-                                    size: 12,
-                                    family: 'Lexend',
-                                    weight: 'normal'
-                                },
-                                color: '#E1E5F2'
-                            },
+                            beginAtZero: true,
                             grid: {
                                 color: '#3A4F76'
                             }
